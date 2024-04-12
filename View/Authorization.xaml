@@ -8,11 +8,15 @@
         Title="Authorization" Height="400" Width="300" ResizeMode="NoResize">
     <Grid>
         <StackPanel Margin="16">
-            <Label Content="Логин"></Label>
+            <Label Content="Логин" Foreground="#484848"></Label>
             <TextBox Name="tbLogin"></TextBox>
-            <Label Content="Пароль"></Label>
+            <Label Content="Пароль" Foreground="#484848"></Label>
             <PasswordBox Name="tbPassword"></PasswordBox>
-            <Button Content="Войти в аккаунт" Margin="0 8 0 0" Click="OnSignClick"></Button>
+            <StackPanel Name="spCaptcha" Visibility="Visible"  Margin="0 8 0 0">
+                <Canvas x:Name="canvas" Height="50"></Canvas>
+                <TextBox Margin="0 8 0 0" Name="tbCaptcha"></TextBox>
+            </StackPanel>
+            <Button Content="Войти в аккаунт"  Foreground="White" Background="#498C51" Margin="0 8 0 0" FontWeight="Bold" Click="OnSignClick"></Button>
         </StackPanel>
     </Grid>
 </Window>
