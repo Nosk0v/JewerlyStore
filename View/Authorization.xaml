@@ -5,18 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JewerlyStore.View"
         mc:Ignorable="d"
-        Title="Authorization" Height="400" Width="300" ResizeMode="NoResize">
+        Title="Authorization" Height="500" Width="300" ResizeMode="NoResize">
     <Grid>
+        
+
         <StackPanel Margin="16">
             <Label Content="Логин" Foreground="#484848"></Label>
             <TextBox Name="tbLogin"></TextBox>
             <Label Content="Пароль" Foreground="#484848"></Label>
             <PasswordBox Name="tbPassword"></PasswordBox>
-            <StackPanel Name="spCaptcha" Visibility="Visible"  Margin="0 8 0 0">
+            <StackPanel Name="spCaptcha" Visibility="Collapsed"  Margin="0 8 0 0">
                 <Canvas x:Name="canvas" Height="50"></Canvas>
                 <TextBox Margin="0 8 0 0" Name="tbCaptcha"></TextBox>
+                <Button Grid.Column="0" Click="OnCaptcha" Content="Подтвердить captcha" Background="#498C51" Foreground="White" BorderBrush="#498C51"></Button>
             </StackPanel>
-            <Button Content="Войти в аккаунт"  Foreground="White" Background="#498C51" Margin="0 8 0 0" FontWeight="Bold" Click="OnSignClick"></Button>
+            <Button Content="Войти в аккаунт" Foreground="White" Background="#498C51" FontWeight="Bold" Click="OnSignClick"/>
         </StackPanel>
+        <Image Margin="16" Grid.Row="0" Source="/Resources/Logo.png" Width="100" Height="100" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            
+        
+        
     </Grid>
+    
 </Window>

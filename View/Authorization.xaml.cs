@@ -24,7 +24,7 @@ namespace JewerlyStore.View
         private Database.User user;
         private bool isRequireCaptcha;
         private string captchaCode;
-        private int startPosition;
+        private double startPosition;
         
 
 
@@ -40,9 +40,9 @@ namespace JewerlyStore.View
 
         private void OnSignClick(object sender, RoutedEventArgs e)
         {
-            if (isRequireCaptcha && captchaCode != tbCaptcha.Text.Trim().ToLower())
+            if (isRequireCaptcha)
             {
-                MessageBox.Show("fdsfsfs");
+                MessageBox.Show("Введите Captcha");
                 return;
             }
             string login = tbLogin.Text.Trim();
@@ -56,10 +56,31 @@ namespace JewerlyStore.View
             if (user == null)
             {
                 MessageBox.Show("Неверный логин или пароль");
+                isRequireCaptcha = true;
+                spCaptcha.Visibility = Visibility.Visible;
                 GenerateCaptcha();
                 return;
             }
+            if (isRequireCaptcha)
+            {
+                isRequireCaptcha = false;
+            }
+            
+            switch (user.UserRole)
+            {
+                case 1: // Администратор
+                    break;
+                case 2: // Менеджер
+                case 3: // Клиент
+
+                    ProductWindow productWindow = new ProductWindow(entities, user);
+                    productWindow.Owner = this;
+                    productWindow.Show();
+                    Hide();
+                    break;
+            }
         }
+      
         private void GenerateCaptcha()
         {
             canvas.Children.Clear();
@@ -90,53 +111,56 @@ namespace JewerlyStore.View
             label.FontWeight = FontWeights.Black;
             label.HorizontalContentAlignment = HorizontalAlignment.Center;
             label.VerticalContentAlignment = VerticalAlignment.Center;
-            label.FontSize = random.Next(24, 32);
+            label.FontSize = random.Next(24, 36);
             label.RenderTransformOrigin = new Point(0.5, 0.5);
-            label.RenderTransform = new RotateTransform(random.Next(-12, 12));
-            
+            label.RenderTransform = new RotateTransform(random.Next(-20, 20));
+            label.FontFamily = new FontFamily("Comic Sans MS");
+
 
             canvas.Children.Add(label);
 
-            int startPosition = (int)((canvas.ActualWidth / 2) - ((letterWidth * 3) / 2));
+            startPosition = (canvas.ActualWidth / 2) - (letterWidth / 2);
 
             Canvas.SetLeft(label, startPosition + (index * letterWidth));
-            Canvas.SetTop(label, random.Next(-10, 10));
+            Canvas.SetTop(label, random.Next(0, 10));
         }
 
         private void GenerateNoise()
         {
-            for (int i = 1; i < 100; i++)
+            int ellipseCount = random.Next(50, 150);
+            for (int i = 1; i < ellipseCount; i++)
             {
-   
-                double x = random.NextDouble() * canvas.ActualWidth;
-                double y = random.NextDouble() * canvas.ActualHeight;
+                double x = random.NextDouble() * 400;
+                double y = random.NextDouble() * 50;
 
-                int radius = random.Next(4, 10);
+                int radius = random.Next(2, 6);
                 Ellipse ellipse = new Ellipse
                 {
                     Width = radius,
                     Height = radius,
-                    Fill = GetRandomBrush((byte)random.Next(100, 180)),
-                    Stroke = Brushes.Transparent
+                    Fill = new SolidColorBrush(Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256))),
+                    Stroke = Brushes.Transparent,
                 };
-
+                canvas.Children.Add(ellipse);
                 Canvas.SetLeft(ellipse, x);
                 Canvas.SetTop(ellipse, y);
-
-                canvas.Children.Add(ellipse);
             }
+
             int lineCount = random.Next(2, 6);
             for (int i = 0; i < lineCount; i++)
             {
-                Line line = new Line();
+             
 
 
-                line.X1 = random.Next(100, 120);
-                line.Y1 = random.Next(10, 54);
-                line.X2 = random.Next(260, 280);
-                line.Y2 = random.Next(10, 54);
-                line.Stroke = GetRandomBrush();
-                line.StrokeThickness = random.Next(2, 4);
+                Line line = new Line
+                {
+                    X1 = random.Next(80, 150),
+                    Y1 = random.Next(10, 70),
+                    X2 = random.Next(240, 280),
+                    Y2 = random.Next(10, 70),
+                    Stroke = new SolidColorBrush(Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256))),
+                    StrokeThickness = 1,
+                };
 
                 canvas.Children.Add(line);
             }
@@ -145,5 +169,22 @@ namespace JewerlyStore.View
         {
             return new SolidColorBrush(Color.FromArgb(alpha, (byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256)));
         }
+
+        private void OnCaptcha(object sender, RoutedEventArgs e)
+        {
+            if (isRequireCaptcha && captchaCode.ToLower() == tbCaptcha.Text.Trim().ToLower())
+            {
+                MessageBox.Show("Все правильно");
+                isRequireCaptcha = false;
+                spCaptcha.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                MessageBox.Show("Неверно");
+                return;
+            }
+        }
+        
     }
-}
+    }
+
