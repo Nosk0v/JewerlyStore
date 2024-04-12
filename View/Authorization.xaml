@@ -5,10 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JewerlyStore.View"
         mc:Ignorable="d"
-        Title="Authorization" Height="500" Width="300" ResizeMode="NoResize">
+        Title="Authorization" Height="400" Width="300" ResizeMode="NoResize">
     <Grid>
-        <StackPanel>
+        <StackPanel Margin="16">
             <Label Content="Логин"></Label>
+            <TextBox Name="tbLogin"></TextBox>
+            <Label Content="Пароль"></Label>
+            <PasswordBox Name="tbPassword"></PasswordBox>
+            <Button Content="Войти в аккаунт" Margin="0 8 0 0" Click="OnSignClick"></Button>
         </StackPanel>
     </Grid>
 </Window>
