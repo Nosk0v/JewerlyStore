@@ -1,6 +1,9 @@
-﻿using System;
+﻿using JewerlyStore.Database;
+using JewerlyStore.Middleware;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,18 +18,45 @@ using System.Windows.Shapes;
 
 namespace JewerlyStore.View
 {
-    /// <summary>
-    /// Логика взаимодействия для ProductWindow.xaml
-    /// </summary>
+   
     public partial class ProductWindow : Window
     {
         private readonly Database.TradeEntities entities;
+        private readonly Database.Manufacture allManufacturer;
+        public Database.Manufacture SelectedManufacturer { get; set; }
         public ObservableCollection<Database.Product> Products { get; set; }
-        public ProductWindow(Database.TradeEntities entities, Database.User user)
+        public ObservableCollection<Database.Manufacture> Manufactures { get; set; }
+        public ObservableCollection<SortItem> SortItems { get; set; }
+        public SortItem SelectedSort { get; set; }
+        public ProductWindow(Database.TradeEntities entities1, Database.User user)
         {
             InitializeComponent();
-            this.entities = entities;
+            entities = entities1;
+            allManufacturer = new Manufacture() { ID = 0, Name = "Все производители" };
             Products = new ObservableCollection<Database.Product>(entities.Products);
+            Manufactures =  new ObservableCollection<Database.Manufacture>(entities.Manufactures);
+            Manufactures.Insert(0, allManufacturer);
+            SortItems = new ObservableCollection<SortItem>()
+            {
+                new SortItem()
+                { 
+                    Text = "Сортировать по возрастастанию цены",
+                  Description = new SortDescription() 
+                  { 
+                      PropertyName = "ProductCost", 
+                      Direction = ListSortDirection.Ascending 
+                  } 
+                },
+                new SortItem()
+                { 
+                    Text = "Сортировать по убыванию цены",
+                  Description = new SortDescription() 
+                  { 
+                      PropertyName = "ProductCost",
+                      Direction = ListSortDirection.Descending 
+                  } 
+                }
+            };
             DataContext = this;
         }
 
@@ -38,12 +68,10 @@ namespace JewerlyStore.View
             }
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ApplyFilter();
-        }
+       
         private void ApplyFilter()
         {
+     
             var searchString = tbSearch.Text.Trim().ToLower();
             var view = CollectionViewSource.GetDefaultView(lvProducts.ItemsSource);
             if (view == null) return;
@@ -52,20 +80,60 @@ namespace JewerlyStore.View
             view.Filter = (object o) =>
             {
                 var product = o as Database.Product;
-                if (product == null) return true;
+                if (product == null) return false;
 
-                var searchFields = new Func<string, bool>[]
+                
+
+
+                if (searchString.Length > 0)
                 {
-                    field => field.ToLower().Contains(searchStringLower),
-                    field => false
-                };
-
-                return searchFields.Any(search => search(product.ProductName) ||
-                                                  search(product.ProductDescription) ||
-                                                  search(product.ProductCategory1.Name) ||
-                                                  search(product.Manufacture.Name) ||
-                                                  search(product.Provider.Name));
+                    
+                   if (!(product.ProductName.ToLower().Contains(searchString) ||
+                       product.ProductDescription.ToLower().Contains(searchString) ||
+                       product.ProductCategory1.Name.ToLower().Contains(searchString) ||
+                       product.Manufacture.Name.ToLower().Contains(searchString) ||
+                       product.Provider.Name.ToLower().Contains(searchString)))
+                    {
+                        return false;
+                    }
+                }
+                if (SelectedManufacturer != null && SelectedManufacturer != allManufacturer) 
+                {
+                    if (product.Manufacture != SelectedManufacturer)
+                    {
+                        return false;
+                    }
+                }
+                return true;
             };
+        }
+
+        private void ApplySort()
+        {
+            var view = CollectionViewSource.GetDefaultView(lvProducts.ItemsSource);
+            if (view == null) return;
+
+            view.SortDescriptions.Clear();
+            if (SelectedSort != null)
+            {
+                view.SortDescriptions.Add(SelectedSort.Description);
+            }
+            
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ApplyFilter();
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ApplyFilter();
+        }
+
+        private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            ApplySort();
         }
     }
 }

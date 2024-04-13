@@ -19,16 +19,26 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" TextChanged="TextBox_TextChanged" Name="tbSearch"></TextBox>
-            <ComboBox Grid.Column="1"></ComboBox>
-            <ComboBox Grid.Column="2"></ComboBox>
-        <!--Список продуктов-->
+            <TextBox Grid.Column="0"
+                     TextChanged="TextBox_TextChanged"
+                     Name = "tbSearch" ></TextBox>
+            <ComboBox Grid.Column="1"
+                      SelectedItem="{Binding SelectedManufacturer}"
+                      ItemsSource="{Binding Manufactures}"
+                      DisplayMemberPath="Name"
+                      SelectionChanged="ComboBox_SelectionChanged"
+                      SelectedIndex="0"></ComboBox>
+            <ComboBox Grid.Column="2" 
+                      ItemsSource="{Binding SortItems}"
+                      DisplayMemberPath="Text" 
+                      SelectionChanged="ComboBox_SelectionChanged_1"
+                      SelectedItem="{Binding SelectedSort}"></ComboBox>
+        
         </Grid>
         <!--Список продуктов-->
         <ListView Grid.Row="1" Name="lvProducts" ItemsSource="{Binding Products}" HorizontalContentAlignment="Stretch" >
             <ListView.ItemTemplate>
                 <DataTemplate>
-
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -36,7 +46,7 @@
                             <ColumnDefinition Width="40"/>
                         </Grid.ColumnDefinitions>
                         <Border Height="48" Width="48" Margin="10" Grid.Column="0">
-                            <Image Source="{Binding ProductPhoto}"/>
+                            <Image Source="{Binding Path = ProductPhoto, Converter={StaticResource imagetoDefault}}"/>
                         </Border>
 
                         <TextBlock Grid.Column="1">
@@ -54,8 +64,6 @@
                                    HorizontalAlignment="Center"
                                    Text="{Binding ProductQuantityInStock}"
                                    Grid.Column="2">
-                           
-                            
                         </TextBlock>
                     </Grid>
                     
@@ -63,7 +71,8 @@
             </ListView.ItemTemplate>
         </ListView>
         <!--Пагинация-->
-        <StackPanel Grid.Row="2">
+        <StackPanel 
+            Grid.Row="2">
             
         </StackPanel>
     </Grid>
