@@ -37,5 +37,35 @@ namespace JewerlyStore.View
                 Owner.Show();
             }
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ApplyFilter();
+        }
+        private void ApplyFilter()
+        {
+            var searchString = tbSearch.Text.Trim().ToLower();
+            var view = CollectionViewSource.GetDefaultView(lvProducts.ItemsSource);
+            if (view == null) return;
+            var searchStringLower = searchString.ToLower();
+
+            view.Filter = (object o) =>
+            {
+                var product = o as Database.Product;
+                if (product == null) return true;
+
+                var searchFields = new Func<string, bool>[]
+                {
+                    field => field.ToLower().Contains(searchStringLower),
+                    field => false
+                };
+
+                return searchFields.Any(search => search(product.ProductName) ||
+                                                  search(product.ProductDescription) ||
+                                                  search(product.ProductCategory1.Name) ||
+                                                  search(product.Manufacture.Name) ||
+                                                  search(product.Provider.Name));
+            };
+        }
     }
 }

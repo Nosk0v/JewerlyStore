@@ -19,10 +19,13 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" TextChanged="TextBox_TextChanged" Name="tbSearch"></TextBox>
+            <ComboBox Grid.Column="1"></ComboBox>
+            <ComboBox Grid.Column="2"></ComboBox>
         <!--Список продуктов-->
         </Grid>
         <!--Список продуктов-->
-        <ListView Grid.Row="1" ItemsSource="{Binding Products}" HorizontalContentAlignment="Stretch">
+        <ListView Grid.Row="1" Name="lvProducts" ItemsSource="{Binding Products}" HorizontalContentAlignment="Stretch" >
             <ListView.ItemTemplate>
                 <DataTemplate>
 
