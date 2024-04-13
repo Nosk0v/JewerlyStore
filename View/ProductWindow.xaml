@@ -3,40 +3,47 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:JewerlyStore.Converters"
         xmlns:local="clr-namespace:JewerlyStore.View"
         mc:Ignorable="d"
         Title="ProductWindow" Height="450" Width="800" Closed="Window_Closed">
-    <Grid Grid.Row="0">
+
+    <Window.Resources>
+        <converters:ImageToDefaultConverter x:Key="ImageToDefaultConverter"/>
+    </Window.Resources>
+
+    <Grid Grid.Row="0" Background="#76E383">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <!--Фильтры-->
-        <Grid>
+
+        <!-- Фильтры -->
+        <Grid Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0"
-                     TextChanged="TextBox_TextChanged"
-                     Name = "tbSearch" ></TextBox>
-            <ComboBox Grid.Column="1"
-                      SelectedItem="{Binding SelectedManufacturer}"
-                      ItemsSource="{Binding Manufactures}"
-                      DisplayMemberPath="Name"
-                      SelectionChanged="ComboBox_SelectionChanged"
-                      SelectedIndex="0"></ComboBox>
-            <ComboBox Grid.Column="2" 
-                      ItemsSource="{Binding SortItems}"
-                      DisplayMemberPath="Text" 
-                      SelectionChanged="ComboBox_SelectionChanged_1"
-                      SelectedItem="{Binding SelectedSort}"></ComboBox>
-        
+
+            <!-- Поле поиска -->
+            <TextBox Grid.Column="0" Name="tbSearch" FontFamily="Comic Sans MS" Margin="0 0 10 0"
+                     Foreground="White" Background="#498C51" TextChanged="TextBox_TextChanged"/>
+
+            
+            <ComboBox Grid.Column="1" SelectedItem="{Binding SelectedManufacturer}" ItemsSource="{Binding Manufactures}" 
+                      DisplayMemberPath="Name" Foreground="#484848" Background="White" SelectionChanged="ComboBox_SelectionChanged"
+                      SelectedIndex="0"/>
+
+           
+            <ComboBox Grid.Column="2" ItemsSource="{Binding SortItems}" DisplayMemberPath="Text" 
+                      SelectedItem="{Binding SelectedSort}" Foreground="#484848" Background="White" SelectionChanged="ComboBox_SelectionChanged_1"
+                      Margin="10 0 0 0"/>
         </Grid>
-        <!--Список продуктов-->
-        <ListView Grid.Row="1" Name="lvProducts" ItemsSource="{Binding Products}" HorizontalContentAlignment="Stretch" >
+
+        <!-- Список продуктов -->
+        <ListView Grid.Row="1" Name="lvProducts" ItemsSource="{Binding Products}" HorizontalContentAlignment="Stretch">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -45,11 +52,14 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="40"/>
                         </Grid.ColumnDefinitions>
+
+                        <!-- Изображение продукта -->
                         <Border Height="48" Width="48" Margin="10" Grid.Column="0">
-                            <Image Source="{Binding Path = ProductPhoto, Converter={StaticResource imagetoDefault}}"/>
+                            <Image Source="{Binding ProductPhoto, Converter={StaticResource ImageToDefaultConverter}}"/>
                         </Border>
 
-                        <TextBlock Grid.Column="1">
+                        <!-- Описание продукта -->
+                        <TextBlock Grid.Column="1" FontFamily="Comic Sans MS">
                             <Run FontWeight="Bold" Text="{Binding ProductName}"/>
                             <LineBreak/>
                             <Run Text="{Binding ProductDescription}"/>
@@ -59,21 +69,15 @@
                             <Run Text="{Binding ProductCost}"/>
                         </TextBlock>
 
-                        <TextBlock FontSize="24" FontWeight="Bold" 
-                                   VerticalAlignment="Center"
-                                   HorizontalAlignment="Center"
-                                   Text="{Binding ProductQuantityInStock}"
-                                   Grid.Column="2">
-                        </TextBlock>
+                        <!-- Количество товара -->
+                        <TextBlock FontSize="24" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   Text="{Binding ProductQuantityInStock}" Grid.Column="2"/>
                     </Grid>
-                    
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <!--Пагинация-->
-        <StackPanel 
-            Grid.Row="2">
-            
-        </StackPanel>
+
+        <!-- Пагинация -->
+        <StackPanel Grid.Row="2"/>
     </Grid>
 </Window>

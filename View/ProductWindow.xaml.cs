@@ -38,6 +38,7 @@ namespace JewerlyStore.View
             Manufactures.Insert(0, allManufacturer);
             SortItems = new ObservableCollection<SortItem>()
             {
+
                 new SortItem()
                 { 
                     Text = "Сортировать по возрастастанию цены",
@@ -57,6 +58,8 @@ namespace JewerlyStore.View
                   } 
                 }
             };
+
+      
             DataContext = this;
         }
 
@@ -134,6 +137,10 @@ namespace JewerlyStore.View
         private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
             ApplySort();
+            if (sender is ComboBox comboBox && comboBox.SelectedItem is SortItem selectedSortItem && selectedSortItem.Description == null)
+            {
+                comboBox.SelectedItem = null;
+            }
         }
     }
 }

@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:JewerlyStore"
              StartupUri="View/Authorization.xaml">
     <Application.Resources>
-        <converters:ImageToDefault x:Key="imageToDefault"/>
+
     </Application.Resources>
 </Application>
+
