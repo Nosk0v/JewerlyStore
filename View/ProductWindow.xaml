@@ -6,21 +6,22 @@
         xmlns:converters="clr-namespace:JewerlyStore.Converters"
         xmlns:local="clr-namespace:JewerlyStore.View"
         mc:Ignorable="d"
-        Title="ProductWindow" Height="450" Width="800" Closed="Window_Closed">
+        Title="ProductWindow" Height="450" Width="800" Closed="Window_Closed" ResizeMode="NoResize">
 
     <Window.Resources>
         <converters:ImageToDefaultConverter x:Key="ImageToDefaultConverter"/>
     </Window.Resources>
 
-    <Grid Grid.Row="0" Background="#76E383">
+    <Grid Margin="10" Grid.Row="0" Background="#76E383">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="12*"/>
+            <RowDefinition Height="37*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Фильтры -->
-        <Grid Margin="10">
+        <Grid Margin="14">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
@@ -29,21 +30,33 @@
 
             <!-- Поле поиска -->
             <TextBox Grid.Column="0" Name="tbSearch" FontFamily="Comic Sans MS" Margin="0 0 10 0"
-                     Foreground="White" Background="#498C51" TextChanged="TextBox_TextChanged"/>
+                     Foreground="#484848" Background="White" TextChanged="TextBox_TextChanged">
+                <TextBox.Effect>
+                    <DropShadowEffect/>
+                </TextBox.Effect>
+            </TextBox>
 
-            
+
             <ComboBox Grid.Column="1" SelectedItem="{Binding SelectedManufacturer}" ItemsSource="{Binding Manufactures}" 
                       DisplayMemberPath="Name" Foreground="#484848" Background="White" SelectionChanged="ComboBox_SelectionChanged"
-                      SelectedIndex="0"/>
+                      SelectedIndex="0" BorderBrush="Black" FontFamily="Comic Sans MS">
+                <ComboBox.Effect>
+                    <DropShadowEffect/>
+                </ComboBox.Effect>
+            </ComboBox>
 
-           
+
             <ComboBox Grid.Column="2" ItemsSource="{Binding SortItems}" DisplayMemberPath="Text" 
                       SelectedItem="{Binding SelectedSort}" Foreground="#484848" Background="White" SelectionChanged="ComboBox_SelectionChanged_1"
-                      Margin="10 0 0 0"/>
+                      Margin="10 0 0 0" FontFamily="Comic Sans MS" BorderBrush="Black">
+                <ComboBox.Effect>
+                    <DropShadowEffect/>
+                </ComboBox.Effect>
+            </ComboBox>
         </Grid>
 
         <!-- Список продуктов -->
-        <ListView Grid.Row="1" Name="lvProducts" ItemsSource="{Binding Products}" HorizontalContentAlignment="Stretch">
+        <ListView Grid.Row="1" Name="lvProducts" ItemsSource="{Binding Products}" HorizontalContentAlignment="Stretch" Grid.RowSpan="2" Margin="10">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -70,14 +83,11 @@
                         </TextBlock>
 
                         <!-- Количество товара -->
-                        <TextBlock FontSize="24" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"
+                        <TextBlock FontSize="20" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#484848"
                                    Text="{Binding ProductQuantityInStock}" Grid.Column="2"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
-        <!-- Пагинация -->
-        <StackPanel Grid.Row="2"/>
     </Grid>
 </Window>
